@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Roles Poll Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a4d5e 0%, #0d2238 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        section {
+            padding: 50px 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #1a4d5e;
+            margin-bottom: 30px;
+            font-weight: 300;
+            border-left: 4px solid #1a4d5e;
+            padding-left: 20px;
+        }
+
+        /* Section 1: Take-home Message */
+        .takeaway {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d4e7ed 100%);
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 6px solid #1a4d5e;
+        }
+
+        .takeaway h3 {
+            color: #0d2238;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .takeaway p {
+            font-size: 1.1em;
+            color: #2c3e50;
+            line-height: 1.8;
+        }
+
+        /* Section 2: Rankings */
+        .ranking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .rank-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rank-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(26, 77, 94, 0.15);
+            border-color: #1a4d5e;
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #1a4d5e 0%, #0d2238 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .rank-card h3 {
+            color: #1a4d5e;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            padding-right: 60px;
+        }
+
+        .rank-card p {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+
+        .reasons {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .reasons strong {
+            color: #0d2238;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .reasons ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .reasons li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .reasons li:before {
+            content: "•";
+            color: #1a4d5e;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Section 3: Individual Comments */
+        .role-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .role-tab {
+            background: white;
+            border: 2px solid #1a4d5e;
+            color: #1a4d5e;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .role-tab:hover {
+            background: #e8f4f8;
+            transform: translateY(-2px);
+        }
+
+        .role-tab.active {
+            background: linear-gradient(135deg, #1a4d5e 0%, #0d2238 100%);
+            color: white;
+        }
+
+        .comments-container {
+            display: none;
+        }
+
+        .comments-container.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .comment-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1a4d5e;
+            transition: all 0.2s ease;
+        }
+
+        .comment-card:hover {
+            background: #e8f4f8;
+            transform: translateX(5px);
+        }
+
+        .comment-card p {
+            color: #444;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .no-comments {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            section {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 1.5em;
+            }
+
+            .ranking-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .role-tabs {
+                justify-content: center;
+            }
+
+            .role-tab {
+                font-size: 0.9em;
+                padding: 10px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Roles Poll Results</h1>
+            <p>Understanding Perspectives on Four Possible Roles of AI</p>
+        </header>
+
+        <!-- Section 1: Take-home Message -->
+        <section id="takeaway">
+            <h2 class="section-title">Key Takeaway</h2>
+            <div class="takeaway">
+                <h3>Main Finding</h3>
+                <p>
+                    [Replace this with your key takeaway message. This should be a clear, concise summary of the most important insight from your poll. What pattern emerged? What did you learn about how people view these AI roles? What surprised you or confirmed your hypothesis?]
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: Rankings & Reasons -->
+        <section id="rankings">
+            <h2 class="section-title">Role Rankings & Feedback Summary</h2>
+            <div class="ranking-grid">
+                <div class="rank-card">
+                    <div class="rank-badge">1</div>
+                    <h3>AI as Collaborator</h3>
+                    <p>A brief description of this role: AI as collaborative partner in research/work.</p>
+                    <div class="reasons">
+                        <strong>Why people ranked this here:</strong>
+                        <ul>
+                            <li>Reason theme 1 from feedback</li>
+                            <li>Reason theme 2 from feedback</li>
+                            <li>Reason theme 3 from feedback</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="rank-card">
+                    <div class="rank-badge">2</div>
+                    <h3>AI as Tool</h3>
+                    <p>A brief description of this role: AI as utility/instrument for specific tasks.</p>
+                    <div class="reasons">
+                        <strong>Why people ranked this here:</strong>
+                        <ul>
+                            <li>Reason theme 1 from feedback</li>
+                            <li>Reason theme 2 from feedback</li>
+                            <li>Reason theme 3 from feedback</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="rank-card">
+                    <div class="rank-badge">3</div>
+                    <h3>AI as Mentor</h3>
+                    <p>A brief description of this role: AI as guide/teacher in learning processes.</p>
+                    <div class="reasons">
+                        <strong>Why people ranked this here:</strong>
+                        <ul>
+                            <li>Reason theme 1 from feedback</li>
+                            <li>Reason theme 2 from feedback</li>
+                            <li>Reason theme 3 from feedback</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="rank-card">
+                    <div class="rank-badge">4</div>
+                    <h3>AI as Student</h3>
+                    <p>A brief description of this role: AI as learner being taught by humans.</p>
+                    <div class="reasons">
+                        <strong>Why people ranked this here:</strong>
+                        <ul>
+                            <li>Reason theme 1 from feedback</li>
+                            <li>Reason theme 2 from feedback</li>
+                            <li>Reason theme 3 from feedback</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Individual Comments -->
+        <section id="comments">
+            <h2 class="section-title">Individual Comments by Role</h2>
+            <p style="margin-bottom: 20px; color: #666;">Click on a role to view all comments for that category:</p>
+
+            <div class="role-tabs">
+                <button class="role-tab active" onclick="showComments('collaborator')">AI as Collaborator</button>
+                <button class="role-tab" onclick="showComments('tool')">AI as Tool</button>
+                <button class="role-tab" onclick="showComments('mentor')">AI as Mentor</button>
+                <button class="role-tab" onclick="showComments('student')">AI as Student</button>
+            </div>
+
+            <div id="collaborator" class="comments-container active">
+                <div class="comment-card">
+                    <p>"[Sample comment 1 for AI as Collaborator - replace with actual feedback]"</p>
+                </div>
+                <div class="comment-card">
+                    <p>"[Sample comment 2 for AI as Collaborator - replace with actual feedback]"</p>
+                </div>
+                <div class="comment-card">
+                    <p>"[Sample comment 3 for AI as Collaborator - replace with actual feedback]"</p>
+                </div>
+            </div>
+
+            <div id="tool" class="comments-container">
+                <div class="comment-card">
+                    <p>"[Sample comment 1 for AI as Tool - replace with actual feedback]"</p>
+                </div>
+                <div class="comment-card">
+                    <p>"[Sample comment 2 for AI as Tool - replace with actual feedback]"</p>
+                </div>
+                <div class="comment-card">
+                    <p>"[Sample comment 3 for AI as Tool - replace with actual feedback]"</p>
+                </div>
+            </div>
+
+            <div id="mentor" class="comments-container">
+                <div class="comment-card">
+                    <p>"[Sample comment 1 for AI as Mentor - replace with actual feedback]"</p>
+                </div>
+                <div class="comment-card">
+                    <p>"[Sample comment 2 for AI as Mentor - replace with actual feedback]"</p>
+                </div>
+                <div class="comment-card">
+                    <p>"[Sample comment 3 for AI as Mentor - replace with actual feedback]"</p>
+                </div>
+            </div>
+
+            <div id="student" class="comments-container">
+                <div class="comment-card">
+                    <p>"[Sample comment 1 for AI as Student - replace with actual feedback]"</p>
+                </div>
+                <div class="comment-card">
+                    <p>"[Sample comment 2 for AI as Student - replace with actual feedback]"</p>
+                </div>
+                <div class="comment-card">
+                    <p>"[Sample comment 3 for AI as Student - replace with actual feedback]"</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function showComments(role) {
+            // Hide all comment containers
+            const containers = document.querySelectorAll('.comments-container');
+            containers.forEach(container => {
+                container.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.role-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected container
+            document.getElementById(role).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
